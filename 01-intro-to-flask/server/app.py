@@ -55,7 +55,7 @@ db.init_app(app)
 
 
 @app.route("/productions")
-def index():
+def index():  # converted 'Hello World!' demo view to GET /productions route which returns a jsonified list of all productions
     productions = Production.query.all()
     productions_response = []
     for production in productions:
@@ -77,10 +77,19 @@ def index():
 #     return f'<h1>{title}</h1>'`
 
 
+# 15.✅ Update the route to find a `production` by its `title` and send it to our browser
+
+# Before continuing, import `jsonify` and `make_response` from Flask at the top of the file.
+
+# 📚 Review With Students: status codes
+# `make_response` will allow us to make a response object with the response body and status code
+# `jsonify` will convert our query into JSON
+
+
 @app.route("/productions/<string:title>")
 def production(title):
     production = Production.query.filter(Production.title == title).first()
-    if not production:
+    if not production:  # very simple error handling responding with the 404 status code
         return make_response("Production not found", 404)
     production_response = {
         "title": production.title,
@@ -91,29 +100,9 @@ def production(title):
     return response
 
 
-# 15.✅ Update the route to find a `production` by its `title` and send it to our browser
-
-# Before continuing, import `jsonify` and `make_response` from Flask at the top of the file.
-
-# 📚 Review With Students: status codes
-# `make_response` will allow us to make a response object with the response body and status code
-# `jsonify` will convert our query into JSON
-
-# `@app.route('/productions/<string:title>')
-# def production(title):
-#     production = Production.query.filter(Production.title == title).first()
-#     production_response = {
-#         "title":production.title,
-#         "genre":production.genre,
-#         "director": production.director
-#         }
-#     response = make_response(
-#         jsonify(production_response),
-#         200
-#     )`
-
-
 # 16.✅ View the path and host with request context
+
+
 @app.route("/context")
 def context():
     return f"<h1>Path: {request.path} Host: {request.host}</h1>"
