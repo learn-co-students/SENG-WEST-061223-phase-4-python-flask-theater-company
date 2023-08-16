@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+
 # 📚 Review With Students:
 # REST
 # Status codes
 # Error handling
+
 # Set up:
 # cd into server and run the following in the terminal
 # export FLASK_APP=app.py
@@ -11,13 +13,11 @@
 # flask db revision --autogenerate -m'Create tables'
 # flask db upgrade
 # python seed.py
+
 from flask import Flask, abort, make_response, request
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
 from models import CastMember, Production, db
-
-# 1.✅ Import NotFound from werkzeug.exceptions for error handling
-
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
@@ -42,14 +42,15 @@ class Productions(Resource):
         return response
 
     def post(self):
+        request_json = request.get_json()
         new_production = Production(
-            title=request.form["title"],
-            genre=request.form["genre"],
-            budget=int(request.form["budget"]),
-            image=request.form["image"],
-            director=request.form["director"],
-            description=request.form["description"],
-            ongoing=bool(request.form["ongoing"]),
+            title=request_json["title"],
+            genre=request_json["genre"],
+            budget=int(request_json["budget"]),
+            image=request_json["image"],
+            director=request_json["director"],
+            description=request_json["description"],
+            ongoing=bool(request_json["ongoing"]),
         )
 
         db.session.add(new_production)
@@ -66,55 +67,5 @@ class Productions(Resource):
 
 api.add_resource(Productions, "/productions")
 
-# 0.✅ Create a GET one route
-# 0.1 Build a class called ProductionByID that inherits from Resource.
-# 0.2 Create a get method and pass it the id along with self. (This is how we will gain access to the id from our request)
-# 0.3 Make a query for our production by the id and build a response to send to the browser.
-
-
-class ProductionByID(Resource):
-    def get(self, id):
-        production = Production.query.filter_by(id=id).first()
-        # 3.✅ If a production is not found raise the NotFound exception
-        # 3.1 AND/OR use abort() to create a 404 with a customized error message
-
-        production_dict = production.to_dict()
-        response = make_response(production_dict, 200)
-
-        return response
-
-
-# 4.✅ Patch
-# 4.1 Create a patch method that takes self and id
-# 4.2 Query the Production from the id
-# 4.3 If the production is not found raise the NotFound exception AND/OR use abort() to create a 404 with a customized error message
-# 4.4 Loop through the request.form object and update the productions attributes. Note: Be cautions of the data types to avoid errors.
-# 4.5 add and commit the updated production
-# 4.6 Create and return the response
-
-# 5.✅ Delete
-# 5.1 Create a delete method, pass it self and the id
-# 5.2 Query the Production
-# 5.3 If the production is not found raise the NotFound exception AND/OR use abort() to create a 404 with a customized error message
-# 5.4 delete the production and commit
-# 5.5 create a response with the status of 204 and return the response
-
-
-# 0.4.✅ Add the new route to our api with api.add_resource
-api.add_resource(ProductionByID, "/productions/<int:id>")
-
-# 2.✅ use the @app.errorhandler() decorator to handle Not Found
-# 2.1 Create the decorator and pass it NotFound
-# 2.2 Use make_response to create a response with a message and the status 404
-# 2.3 return t he response
-
-# Warm-up 1. Mini-challenge:
-# create a GET /cast_members index route
-
-# Warm-up 2. Mini-challenge:
-# create a POST /cast_members create route
-
-
-# To run the file as a script
-# if __name__ == '__main__':
-#     app.run(port=5000, debug=True)
+if __name__ == "__main__":
+    app.run(port=5000, debug=True)
