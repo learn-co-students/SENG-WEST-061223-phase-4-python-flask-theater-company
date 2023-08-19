@@ -7,7 +7,7 @@ import * as yup from "yup"
 
 
 function ProductionFormEdit({updateProduction, production_edit}) {
-  const [errors, setError] = useState(false)
+  const [errors, setErrors] = useState(false)
   const history = useHistory()
   const formSchema = yup.object().shape({
     title: yup.string().required("Must enter a title"),
@@ -27,13 +27,30 @@ function ProductionFormEdit({updateProduction, production_edit}) {
     validationSchema: formSchema,
     onSubmit: (values) => {
            // 11.✅ Add a PATCH
-          // 12. Navigate to Production Detail
+           fetch(`/productions/${production_edit.id}`, {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(values, null, 2),
+           })
+           .then(res => {
+              if (res.ok) {
+                res.json().then(production => {
+                  updateProduction(production)
+                  // 12. Navigate to Production Detail
+                  history.push(`/productions/${production.id}`)
+                })
+              } else {
+                res.json().then(errors => setErrors(errors.message))
+              }
+           })
         },
       })
 
     return (
       <div className='App'>
-      {errors&& <h2>{errors}</h2>}
+      {errors && <h2>{errors}</h2>}
       {formik.errors&& Object.values(formik.errors).map(error => <h2>{error}</h2>)}
       <Form onSubmit={formik.handleSubmit}>
         <label>Title </label>
