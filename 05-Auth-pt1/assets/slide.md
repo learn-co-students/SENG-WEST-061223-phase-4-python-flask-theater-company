@@ -3,7 +3,7 @@ theme : "night"
 transition: "slide"
 highlightTheme: "monokai"
 slideNumber: false
-title: "P4L2 - REST APIs with Flask (Part 1)"
+title: "P4L5 - REST API Authentication with Flask"
 verticalSeparator: 'xxx'
 presentation:
     width: 1500
