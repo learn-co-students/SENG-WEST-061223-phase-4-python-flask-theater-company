@@ -1,13 +1,4 @@
-# 📚 Review With Students:
-# The dangers of plain text passwords
-# What Hashing is
-# Hashing vs encryption
-# How to Hash a string
-# Salting
-# Rainbow Tables
-# Bcrypt
-
-# 3.✅ Import bcyrpt from app
+# 3.✅ Import bcyrpt from app (on config.py)
 from config import bcrypt, db
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import validates
@@ -80,18 +71,18 @@ class User(db.Model, SerializerMixin):
     # 6.✅ Navigate to app
 
     # 7.✅ Create a setter method called password_hash that takes self and a password.
-    # 7.1 Use bcyrpt to generate the password hash with bcrypt.generate_password_hash
-    # 7.2 Set the _password_hash to the hashed password
     @password_hash.setter
     def password_hash(self, password):
+        # 7.1 Use bcyrpt to generate the password hash with bcrypt.generate_password_hash
         password_hash = bcrypt.generate_password_hash(password.encode("utf-8"))
+        # 7.2 Set the _password_hash to the hashed password
         self._password_hash = password_hash.decode("utf-8")
 
     # 8.✅ Create an authenticate method that uses bcyrpt to verify the password against the hash in the DB with bcrypt.check_password_hash
-
     def authenticate(self, password):
         return bcrypt.check_password_hash(self._password_hash, password.encode("utf-8"))
 
     # 9.✅ Navigate to app
+
     def __repr__(self):
         return f"USER: ID: {self.id}, Name {self.name}, Email: {self.email}, Admin: {self.admin}"

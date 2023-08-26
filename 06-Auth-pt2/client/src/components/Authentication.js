@@ -44,7 +44,7 @@ function Authentication({updateUser}) {
             //12✅ Handle user errors if Auth fails
               //12.1 add errors to state
               //12.2 conditionally render the errors in jsx
-            res.json().then(console.log)
+            res.json().then(error => setError(error.message))
           }
         })
        
