@@ -14,7 +14,8 @@
 
 from config import api, app, db
 from flask import Flask, abort, jsonify, make_response, request, session
-from flask_cors import CORS
+
+# from flask_cors import CORS
 from flask_restful import Resource
 from models import CastMember, Production, User, db
 from werkzeug.exceptions import NotFound, Unauthorized
@@ -22,7 +23,7 @@ from werkzeug.exceptions import NotFound, Unauthorized
 # 2.✅ Navigate to "models.py"
 # Continue on Step 3
 
-CORS(app)
+# CORS(app)
 
 
 # the following adds route-specific authorization
