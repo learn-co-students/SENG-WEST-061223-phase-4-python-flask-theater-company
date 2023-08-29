@@ -3,12 +3,11 @@ from app import app
 from faker import Faker
 from models import CastMember, Production, User, db
 
-db.init_app(app)
 fake = Faker()
 
 with app.app_context():
-    Production.query.delete()
     CastMember.query.delete()
+    Production.query.delete()
 
     productions = []
 
@@ -110,6 +109,8 @@ with app.app_context():
     db.session.add_all(hamilton_cast_members)
     db.session.commit()
 
-    user = User(name="Rose Thecat", email="rose_is_cute@gmail.com")
+    user = User(
+        name="Rose Thecat", email="rose_is_cute@gmail.com", password_hash="1234jkl;"
+    )
     db.session.add(user)
     db.session.commit()
