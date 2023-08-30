@@ -3,7 +3,6 @@ from app import app
 from faker import Faker
 from models import CastMember, Production, User, db
 
-db.init_app(app)
 fake = Faker()
 
 with app.app_context():
