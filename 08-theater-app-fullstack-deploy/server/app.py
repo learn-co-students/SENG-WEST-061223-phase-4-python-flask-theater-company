@@ -24,7 +24,15 @@ CORS(app)
 
 @app.before_request
 def check_if_logged_in():
-    open_access_list = ["signup", "login", "logout", "authorized", "productions"]
+    open_access_list = [
+        "signup",
+        "login",
+        "logout",
+        "authorized",
+        "productions",
+        "index",
+        "static",
+    ]
 
     if request.endpoint not in open_access_list and not session.get("user_id"):
         raise Unauthorized
