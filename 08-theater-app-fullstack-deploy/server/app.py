@@ -5,7 +5,15 @@
 # `honcho start -f Procfile.dev`
 
 from config import api, app, db
-from flask import Flask, abort, jsonify, make_response, request, session
+from flask import (
+    Flask,
+    abort,
+    jsonify,
+    make_response,
+    render_template,
+    request,
+    session,
+)
 from flask_cors import CORS
 from flask_restful import Resource
 from models import CastMember, Production, User, db
@@ -20,6 +28,12 @@ def check_if_logged_in():
 
     if request.endpoint not in open_access_list and not session.get("user_id"):
         raise Unauthorized
+
+
+@app.route("/")
+@app.route("/<int:id>")
+def index(id=0):
+    return render_template("index.html")
 
 
 class Productions(Resource):
