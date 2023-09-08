@@ -8,13 +8,31 @@ import Navigation from './components/Navigation'
 import ProductionDetail from './components/ProductionDetail'
 import NotFound from './components/NotFound'
 import Authentication from './components/Authentication'
+import { useAutoLoginQuery } from './app/services/userApi'
 
 function App() {
   const [productions, setProductions] = useState([])
-  const [user, setUser] = useState(null)
+  // const [user, setUser] = useState(null)
+
+  const {
+    data: user=null,
+    error,
+    isLoading,
+    isFetching,
+    isUninitialized,
+    isSuccess,
+    isError,
+  } = useAutoLoginQuery()
+  console.log("🚀 ~ file: App.js:26 ~ App ~ isError:", isError)
+  console.log("🚀 ~ file: App.js:26 ~ App ~ isSuccess:", isSuccess)
+  console.log("🚀 ~ file: App.js:26 ~ App ~ isUninitialized:", isUninitialized)
+  console.log("🚀 ~ file: App.js:26 ~ App ~ isFetching:", isFetching)
+  console.log("🚀 ~ file: App.js:26 ~ App ~ isLoading:", isLoading)
+  console.log("🚀 ~ file: App.js:26 ~ App ~ error:", error)
+  console.log("🚀 ~ file: App.js:19 ~ App ~ user:", user)
 
   useEffect(() => {
-    fetchUser()
+    // fetchUser()
     fetchProductions()
   },[])
 
@@ -24,35 +42,35 @@ function App() {
     .then(setProductions)
   )
 
-  const fetchUser = () => (
-    fetch('/authorized')
-    .then(res => {
-      if(res.ok){
-        res.json()
-        .then(data => {
-          setUser(data)
-        })
-      } else {
-        setUser(null)
-      }
-    })
-  )
+  // const fetchUser = () => (
+  //   fetch('/authorized')
+  //   .then(res => {
+  //     if(res.ok){
+  //       res.json()
+  //       .then(data => {
+  //         setUser(data)
+  //       })
+  //     } else {
+  //       setUser(null)
+  //     }
+  //   })
+  // )
  
   const addProduction = (production) => setProductions(current => [...current,production])
   
-  const updateUser = (user) => setUser(user)
+  // const updateUser = (user) => setUser(user)
   if(!user) return (
     <>
       <GlobalStyle />
       <Navigation/>
-      <Authentication updateUser={updateUser}/>
+      <Authentication />
     </>
   )
 
   return (
     <>
     <GlobalStyle />
-    <Navigation updateUser={updateUser}/>
+    <Navigation />
       <Switch>
         <Route path='/productions/new'>
           <ProductionForm addProduction={addProduction}/>
@@ -61,7 +79,7 @@ function App() {
             <ProductionDetail />
         </Route>
         <Route exact path='/authentication'>
-          <Authentication updateUser={updateUser}/>
+          <Authentication />
         </Route>
         <Route exact path='/'>
           <Home  productions={productions}/>

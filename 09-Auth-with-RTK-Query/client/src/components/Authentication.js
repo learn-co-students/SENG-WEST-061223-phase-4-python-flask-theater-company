@@ -3,13 +3,16 @@ import {useHistory} from 'react-router-dom'
 import styled from "styled-components";
 import { useFormik } from "formik"
 import * as yup from "yup"
+import { useCreateUserMutation } from '../app/services/userApi'
 
 
-function Authentication({updateUser}) {
+function Authentication() {
   const [signUp, setSignUp] = useState(false)
-  const [error, setError] = useState(null)
+  // const [error, setError] = useState(null)
   
   const history = useHistory()
+
+  const [createUser, {isLoading, error}] = useCreateUserMutation()
 
   const handleClick = () => setSignUp((signUp) => !signUp)
   const formSchema = yup.object().shape({
@@ -17,6 +20,7 @@ function Authentication({updateUser}) {
     email: yup.string().email(),
     password: yup.string().required("Please enter a secure password")
   })
+
 
   const formik = useFormik({
     initialValues: {
@@ -26,27 +30,25 @@ function Authentication({updateUser}) {
     },
     validationSchema: formSchema,
     onSubmit: (values) => {
-        fetch(signUp?'/signup':'/login',{
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(values),
-        })
-        .then(res => {
-          if(res.ok){
-            res.json().then(user => {
-              console.log(user)
-              updateUser(user)
-              history.push('/')
-            })
-          } else {
-            //12✅ Handle user errors if Auth fails
-              //12.1 add errors to state
-              //12.2 conditionally render the errors in jsx
-            res.json().then(error => setError(error.message))
-          }
-        })
+        signUp ? createUser(values) : console.log("login")
+        // fetch(signUp?'/signup':'/login',{
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify(values),
+        // })
+        // .then(res => {
+        //   if(res.ok){
+        //     res.json().then(user => {
+        //       console.log(user)
+        //       history.push('/')
+        //     })
+        //   } else {
+
+        //     // res.json().then(error => setError(error.message))
+        //   }
+        // })
        
     },
   })
