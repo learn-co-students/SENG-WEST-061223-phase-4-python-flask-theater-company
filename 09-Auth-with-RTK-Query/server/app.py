@@ -155,7 +155,7 @@ api.add_resource(AuthorizedSession, "/authorized")
 class Logout(Resource):
     def delete(self):
         session["user_id"] = None
-        response = make_response("", 204)
+        response = make_response({"message": "User logged out"}, 204)
         return response
 
 
