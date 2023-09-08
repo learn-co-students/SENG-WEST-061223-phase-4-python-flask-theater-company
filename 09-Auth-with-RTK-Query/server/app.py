@@ -133,7 +133,7 @@ class Login(Resource):
             session["user_id"] = user.id
             return make_response(user.to_dict(), 200)
         else:
-            raise Unauthorized
+            return make_response({"message": "Username or password incorrect"}, 401)
 
 
 api.add_resource(Login, "/login")

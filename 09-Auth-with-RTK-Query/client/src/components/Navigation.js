@@ -3,20 +3,24 @@ import {Link} from 'react-router-dom'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { GiHamburgerMenu } from 'react-icons/gi'
+import { useLogoutUserMutation } from '../app/services/userApi'
 
 function Navigation({updateUser}) {
  const [menu, setMenu] = useState(false)
  const history = useHistory()
 
+ const [logoutUser] = useLogoutUserMutation()
+
  const handleLogout = () => {
-    fetch("/logout", {
-      method: "DELETE",
-    }).then(res => {
-      if(res.ok){
-          updateUser(null)
-          history.push('/authentication')
-      }
-    })
+    logoutUser()
+    // fetch("/logout", {
+    //   method: "DELETE",
+    // }).then(res => {
+    //   if(res.ok){
+    //       updateUser(null)
+    //       history.push('/authentication')
+    //   }
+    // })
  }
 
     return (

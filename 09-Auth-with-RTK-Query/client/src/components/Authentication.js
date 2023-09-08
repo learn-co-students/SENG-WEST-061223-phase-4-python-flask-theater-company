@@ -3,7 +3,7 @@ import {useHistory} from 'react-router-dom'
 import styled from "styled-components";
 import { useFormik } from "formik"
 import * as yup from "yup"
-import { useCreateUserMutation } from '../app/services/userApi'
+import { useCreateUserMutation, useLoginUserMutation } from '../app/services/userApi'
 
 
 function Authentication() {
@@ -12,7 +12,8 @@ function Authentication() {
   
   const history = useHistory()
 
-  const [createUser, {isLoading, error}] = useCreateUserMutation()
+  const [createUser, {isLoading: loadingSignup, error: signupError}] = useCreateUserMutation()
+  const [loginUser, {isLoading: loadingLogin, error: loginError}] = useLoginUserMutation()
 
   const handleClick = () => setSignUp((signUp) => !signUp)
   const formSchema = yup.object().shape({
@@ -30,7 +31,7 @@ function Authentication() {
     },
     validationSchema: formSchema,
     onSubmit: (values) => {
-        signUp ? createUser(values) : console.log("login")
+        signUp ? createUser(values) : loginUser(values)
         // fetch(signUp?'/signup':'/login',{
         //   method: "POST",
         //   headers: {
@@ -55,7 +56,8 @@ function Authentication() {
 
     return (
         <> 
-        {error && <h2 style={{color:'red'}}> {error} </h2>}
+        {signupError && <h2 style={{color:'red'}}> {signupError.data.message} </h2>}
+        {loginError && <h2 style={{color:'red'}}> {loginError.data.message} </h2>}
         <h2>Please Log in or Sign up!</h2>
         <h2>{signUp?'Already a member?':'Not a member?'}</h2>
         <button onClick={handleClick}>{signUp?'Log In!':'Register now!'}</button>

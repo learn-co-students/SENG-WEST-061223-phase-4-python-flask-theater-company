@@ -20,9 +20,31 @@ export const userApi = createApi({
                 }),
                 invalidatesTags: ['User'],
             }),
-
+            loginUser: builder.mutation({
+                query: ({...body}) => ({
+                    url: '/login',
+                    method: 'POST',
+                    body
+                }),
+                invalidatesTags: ['User']
+            }),
+            logoutUser: builder.mutation({
+                query: () => ({
+                    url: '/logout',
+                    method: 'DELETE',
+                }),
+                // invalidatesTags: ['User']
+                async onQueryStarted(_, {dispatch, queryFulfilled}){
+                    try {
+                        await queryFulfilled
+                        dispatch(userApi.util.resetApiState())
+                    } catch {
+                        dispatch(userApi.util.invalidateTags(['User']))
+                    }
+                }
+            })
         }
     }
 })
 
-export const { useAutoLoginQuery, useCreateUserMutation } = userApi
+export const { useAutoLoginQuery, useCreateUserMutation, useLoginUserMutation, useLogoutUserMutation } = userApi
