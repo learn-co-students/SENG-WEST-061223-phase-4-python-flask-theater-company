@@ -155,6 +155,7 @@ api.add_resource(AuthorizedSession, "/authorized")
 class Logout(Resource):
     def delete(self):
         session["user_id"] = None
+        # logout now returns a dict with content as response in order to trigger a cache refresh in the Redux store
         response = make_response({"message": "User logged out"}, 204)
         return response
 
